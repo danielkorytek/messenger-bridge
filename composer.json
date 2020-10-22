@@ -1,0 +1,21 @@
+{
+    "name": "danielkorytek/messenger-bridge-bundle",
+    "license": "proprietary",
+    "type": "symfony-bundle",
+    "description": "Messenger bridge for Docplanner messaging standard",
+    "require": {
+        "php": "^7.2.5",
+        "symfony/messenger": "^4.4 || ^5.0"
+    },
+    "authors": [
+        {
+            "name": "Daniel Korytek",
+            "email": "daniel.korytek@docplanner.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DanielKorytek\\MessengerBridgeBundle\\": "src"
+        }
+    }
+}

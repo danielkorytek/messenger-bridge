@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+
+  messenger.bridge.mapping.resolver:
+    class: DanielKorytek\MessengerBridgeBundle\Message\Serializer\MappingResolver\MessageMappingResolver
+    arguments:
+      - '%messenger.bridge.subscriber_events_mapping%'
+
+  messenger.bridge.mapping_aware.serializer:
+    class: DanielKorytek\MessengerBridgeBundle\Message\Serializer\MappingAwareSerializer
+    arguments:
+      - '@messenger.bridge.mapping.resolver'
+      - '@serializer'
+
+  messenger.bridge.serializer:
+    class: DanielKorytek\MessengerBridgeBundle\Message\Serializer\DocplannerEnvelopeSerializer
+    arguments:
+      - '@messenger.bridge.mapping_aware.serializer'
+      - '@serializer'
