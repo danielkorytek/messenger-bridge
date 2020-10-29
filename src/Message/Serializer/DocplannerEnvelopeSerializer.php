@@ -64,10 +64,8 @@ final class DocplannerEnvelopeSerializer implements SerializerInterface
 
 		return [
 			'body'    => $this->serializer->serialize($docplannerEnvelope, 'json'),
-			'headers' => [
-				'type' => array_merge($this->encodeStamps($envelope), $this->getContentTypeHeader()),
-			],
-		];
+			'headers' =>  $this->encodeStamps($envelope) +  $this->getContentTypeHeader()
+			];
 	}
 
 	private function encodeStamps(Envelope $envelope): array
