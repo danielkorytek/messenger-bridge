@@ -11,6 +11,7 @@ use DanielKorytek\MessengerBridgeBundle\Message\Routing\RoutingKeyResolver\Routi
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
+use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 use Symfony\Component\Messenger\Transport\AmqpExt\AmqpStamp;
 
 final class RoutingKeyMiddleware implements MiddlewareInterface
@@ -31,6 +32,12 @@ final class RoutingKeyMiddleware implements MiddlewareInterface
 		if (!$message instanceof NamedMessageInterface)
 		{
 			throw new UnsupportedMessage('Message must be instance of NamedMessageInterface');
+		}
+
+		//If messages comes from transport, we're skipping that
+		if ($envelope->all(ReceivedStamp::class))
+		{
+			return $stack->next()->handle($envelope, $stack);
 		}
 
 		$routingKey = $this->routingKeyResolver->resolve($message);
