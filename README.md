@@ -7,7 +7,8 @@ That middleware gives an ability to routing key modification ie: add current loc
 
 Configuration:
 
-1. Register middleware
+- Register middleware
+
  ```
 messenger.bridge.routing.app_id_routing_key_resolver:
     class: DanielKorytek\MessengerBridgeBundle\Message\Routing\RoutingKeyResolver\AppIdRoutingKeyResolver
@@ -21,7 +22,7 @@ messenger.bridge.middleware.routing_key:
 
 ```
 
-2. Attach middleware to messenger
+- Attach a middleware to messenger
 
 In `messenger.yml` put `messenger.bridge.middleware.routing_key` to your bus middleware list.
 
@@ -112,4 +113,73 @@ framework:
                             exchange:
                                 name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
                                 type: topic
+```
+
+### Messages
+
+All messages representation classes `HAVE TO` implement `NamedMessageInterface`. Every message handled by bus, without implementing `NamedMessageInterface` will throws `UnsupportedMessage` exception.
+ 
+### Publishing
+
+1. Check if your bus has `allow_no_handlers` middleware (it's required). Your bus will publish message to transport only when you don't have any subscriber class for that message.
+2. Add your message FQCN to messenger routing configuration with correct transport name:
+   ```
+      routing:
+               'App\SharedEventBus\Test': shared
+   ```
+
+### Subscribing 
+
+- Add message binding key in your incoming transport:
+This step is for messenger command. If you're using different package, you should update config in proper place.
+```
+ incoming:
+    serializer: messenger.bridge.serializer
+    dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+    options:
+        queues:
+            incoming_events: #your queue name (here yours app receives messages from other apps via exchange)
+                binding_keys:
+                    - "%locale%.app-name.smth.changed"
+                    - "%locale%.app-name.smth"  #new key
+                exchange:
+                    name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
+                    type: topic
+```
+- Create representation class for a message.
+- Attach message mapping to `messenger.bridge.subscriber_events_mapping` parameter:
+
+```
+messenger.bridge.subscriber_events_mapping:
+    app-name.smth.changed: App\Namespace\MessageClass
+```
+- Create subscriber class and bind with correct bus: 
+
+```
+<?php
+
+declare(strict_types=1);
+
+namespace App\SharedEventBus;
+
+
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
+
+class SaasAttendanceSubscriber implements MessageSubscriberInterface
+{
+    public function __invoke(MessageClass $messageClass): Envelope
+    {
+        return new Envelope($messageClass);
+    }
+
+    public static function getHandledMessages(): iterable
+    {
+        yield MessageClass::class => [
+            'bus' => 'shared.message.bus',
+        ];
+    }
+
+}
+
 ```
