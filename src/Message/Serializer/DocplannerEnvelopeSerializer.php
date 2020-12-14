@@ -44,9 +44,13 @@ final class DocplannerEnvelopeSerializer implements SerializerInterface
 		$body   = $encodedEnvelope['body'];
 		$stamps = $this->decodeStamps($encodedEnvelope);
 
-		/** @var DocplannerEnvelope $docplannerEnvelope */
-		$docplannerEnvelope = $this->serializer->deserialize($body, DocplannerEnvelope::class, 'json');
-		$message            = $this->mappingAwareSerializer->deserialize($docplannerEnvelope);
+        try {
+            /** @var DocplannerEnvelope $docplannerEnvelope */
+            $docplannerEnvelope = $this->serializer->deserialize($body, DocplannerEnvelope::class, 'json');
+            $message            = $this->mappingAwareSerializer->deserialize($docplannerEnvelope);
+        } catch (UnexpectedValueException $e) {
+            throw new MessageDecodingFailedException(sprintf('Could not decode message: %s.', $e->getMessage()), $e->getCode(), $e);
+        }
 
 		return new Envelope($message, $stamps);
 	}
