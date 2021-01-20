@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DanielKorytek\MessengerBridgeBundle\Middleware;
+namespace DanielKorytek\MessengerBridgeBundle\Middleware\Symf51;
 
 
 use DanielKorytek\MessengerBridgeBundle\Exception\UnsupportedMessage;
@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
-use Symfony\Component\Messenger\Transport\AmqpExt\AmqpStamp;
+use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpStamp;
 
 final class RoutingKeyMiddleware implements MiddlewareInterface
 {
