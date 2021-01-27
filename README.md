@@ -13,8 +13,18 @@ Configuration:
 messenger.bridge.routing.app_id_routing_key_resolver:
     class: DanielKorytek\MessengerBridgeBundle\Message\Routing\RoutingKeyResolver\AppIdRoutingKeyResolver
 
+Symfony < 5.1
 messenger.bridge.middleware.routing_key:
     class: DanielKorytek\MessengerBridgeBundle\Middleware\RoutingKeyMiddleware
+    arguments:
+      - '@messenger.bridge.routing.app_id_routing_key_resolver'
+    tags:
+      - { name: messenger.middleware }
+
+Symfony >= 5.1
+
+messenger.bridge.middleware.routing_key:
+    class: DanielKorytek\MessengerBridgeBundle\Middleware\Symf51\RoutingKeyMiddleware
     arguments:
       - '@messenger.bridge.routing.app_id_routing_key_resolver'
     tags:
