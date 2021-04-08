@@ -110,9 +110,9 @@ framework:
                         incoming_events: #your queue name (here yours app receives messages from other apps via exchange)
                             binding_keys:
                                 - "%locale%.app-name.smth.changed" #routing key binding list
-                            exchange:
-                                name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
-                                type: topic
+                    exchange:
+                        name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
+                        type: topic
 ```
 
 ### Messages
