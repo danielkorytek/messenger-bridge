@@ -15,6 +15,9 @@ final class BusStampEnvelopeSerializer implements SerializerInterface
      */
     private $serializer;
 
+    /**
+     * @var string
+     */
     private $busName;
 
     public function __construct(SerializerInterface $serializer, string $busName)
