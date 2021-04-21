@@ -9,7 +9,7 @@ Configuration:
 
 - Register middleware
 
- ```
+ ```yaml
 messenger.bridge.routing.app_id_routing_key_resolver:
     class: DanielKorytek\MessengerBridgeBundle\Message\Routing\RoutingKeyResolver\AppIdRoutingKeyResolver
 
@@ -28,7 +28,7 @@ In `messenger.yml` put `messenger.bridge.middleware.routing_key` to your bus mid
 
 Example:
 
-```
+```yaml
 framework:
        messenger:
            default_bus: command.bus
@@ -47,7 +47,7 @@ To endure adequate possibility for serialization/deserialization process, you ne
 
 Required serializer configuration:
 
-```
+```yaml
 services:
     serializer.property.normalizer:
         class: Symfony\Component\Serializer\Normalizer\PropertyNormalizer
@@ -75,7 +75,7 @@ services:
 
 ### Bus example configuration
 
-```
+```yaml
 framework:
     messenger:
         #your other buses here
@@ -130,11 +130,22 @@ All messages representation classes `HAVE TO` implement `NamedMessageInterface`.
 
 ### Subscribing 
 
+- Register serializer for external messages
+```yaml
+services:
+
+  messenger.bridge.bus_stamp_docplanner.serializer:
+    class: DanielKorytek\MessengerBridgeBundle\Message\Serializer\BusStampEnvelopeSerializer
+    arguments:
+      - '@messenger.bridge.serializer' #docplanner SEB  messages serializer
+      - 'shared.message.bus' #bus name from messenger configuration
+```
+
 - Add message binding key in your incoming transport:
 This step is for messenger command. If you're using different package, you should update config in proper place.
-```
+```yaml
  incoming:
-    serializer: messenger.bridge.serializer
+    serializer: messenger.bridge.bus_stamp_docplanner.serializer 
     dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
     options:
         queues:
@@ -142,20 +153,20 @@ This step is for messenger command. If you're using different package, you shoul
                 binding_keys:
                     - "%locale%.app-name.smth.changed"
                     - "%locale%.app-name.smth"  #new key
-                exchange:
-                    name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
-                    type: topic
+        exchange:
+            name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
+            type: topic
 ```
 - Create representation class for a message.
 - Attach message mapping to `messenger.bridge.subscriber_events_mapping` parameter:
 
-```
+```yaml
 messenger.bridge.subscriber_events_mapping:
     app-name.smth.changed: App\Namespace\MessageClass
 ```
-- Create subscriber class and bind with correct bus: 
+- Create subscriber class and bind with correct bus:
 
-```
+```php
 <?php
 
 declare(strict_types=1);
@@ -183,3 +194,4 @@ class SaasAttendanceSubscriber implements MessageSubscriberInterface
 }
 
 ```
+
