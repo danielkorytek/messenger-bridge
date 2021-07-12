@@ -4,7 +4,7 @@
     "type": "symfony-bundle",
     "description": "Messenger bridge for Docplanner messaging standard",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5 || ^8.0",
         "symfony/messenger": "^4.4 || ^5.0"
     },
     "authors": [
