@@ -167,6 +167,16 @@ This step is for messenger command. If you're using different package, you shoul
             name: "%env(MESSENGER_SHARED_INCOMING_EXCHANGE_NAME)%" #incoming exchange name
             type: topic
 ```
+```yaml
+service:
+   messenger.bridge.bus_stamp_docplanner.serializer:
+        class: DanielKorytek\MessengerBridgeBundle\Message\Serializer\BusStampEnvelopeSerializer
+        arguments:
+            - '@messenger.bridge.serializer'
+            - 'bus.name.from.messenger.configuration'
+
+```
+
 - Create representation class for a message.
 - Attach message mapping to `messenger.bridge.subscriber_events_mapping` parameter:
 
