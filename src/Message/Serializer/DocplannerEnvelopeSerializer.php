@@ -28,7 +28,7 @@ final class DocplannerEnvelopeSerializer implements SerializerInterface
 	 */
 	private $serializer;
 
-	public function __construct(MappingAwareSerializer $mappingAwareSerializer, SymfonySerializerInterface $serializer)
+	public function __construct(MappingAwareSerializerInterface $mappingAwareSerializer, SymfonySerializerInterface $serializer)
 	{
 		$this->serializer             = $serializer;
 		$this->mappingAwareSerializer = $mappingAwareSerializer;
