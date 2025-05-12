@@ -18,7 +18,7 @@ final class DocplannerEnvelope
 	 */
 	private $payload;
 
-	public function __construct(string $type, string $payload = null)
+	public function __construct(string $type, ?string $payload = null)
 	{
 		$this->type    = $type;
 		$this->payload = $payload;
